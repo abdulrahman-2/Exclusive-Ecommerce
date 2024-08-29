@@ -14,7 +14,7 @@ import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 
 const ThisMonth = () => {
-  const products = useSelector((state) => state.product);
+  const products = useSelector((state) => state.product.products);
 
   return (
     <div>
@@ -53,17 +53,10 @@ const ThisMonth = () => {
           modules={[Navigation]}
           className="mySwiper"
         >
-          {products.products.slice(6, 10).map((product) => {
+          {products.slice(6, 10).map((product) => {
             return (
               <SwiperSlide key={product.id}>
-                <Cart
-                  image={product.image}
-                  discount={product.discount}
-                  dsc={product.name}
-                  price={product.price}
-                  oldPrice={product.oldPrice}
-                  num={`(${product.quantity})`}
-                />
+                <Cart product={product} />
               </SwiperSlide>
             );
           })}

@@ -14,8 +14,20 @@ import Profile from "./pages/profile/Profile";
 import TopHeader from "./components/header/TopHeader";
 import CheckOut from "./pages/checkOut/CheckOut";
 import AllProduct from "./pages/allProduct/AllProduct";
+import Notification from "./components/notifications/Notifications";
+
+import { useDispatch } from "react-redux";
+import { setProducts } from "./redux/products/productsSlice";
+import { productsData } from "./data/productData";
+import { useEffect } from "react";
 
 const App = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setProducts(productsData));
+  }, [dispatch]);
+
   return (
     <>
       <TopHeader />
@@ -34,6 +46,7 @@ const App = () => {
           <Route path="/Profile" element={<Profile />} />
           <Route path="/*" element={<ErrorPage />} />
         </Routes>
+        <Notification />
       </div>
       <Footer />
     </>

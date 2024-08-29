@@ -7,6 +7,7 @@ import { IoMenu } from "react-icons/io5";
 import { IoClose } from "react-icons/io5";
 import { GoPerson } from "react-icons/go";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -14,6 +15,8 @@ const Header = () => {
   const handleMenuToggle = () => {
     setMenuOpen(!menuOpen);
   };
+
+  const cartItems = useSelector((state) => state.cart.cartItems);
 
   return (
     <HeaderWrap className="header w-full h-[100px] flex items-center justify-between">
@@ -84,7 +87,7 @@ const Header = () => {
             <IoCartOutline size={24} className="cursor-pointer mr-6 md:mr-0" />
           </Link>
           <span className="absolute -top-[5px] right-[17px] md:-top-[5px] md:-right-[5px] w-4 h-4 rounded-full bg-red-500 text-white grid place-items-center text-[10px] z-10">
-            1
+            {cartItems.length}
           </span>
         </div>
 

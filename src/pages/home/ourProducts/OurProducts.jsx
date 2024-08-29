@@ -15,7 +15,7 @@ import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
 
 const OurProducts = () => {
-  const products = useSelector((state) => state.product);
+  const products = useSelector((state) => state.product.products);
   return (
     <div>
       <div className="flex flex-col items-center justify-center md:flex-row md:justify-between">
@@ -58,17 +58,10 @@ const OurProducts = () => {
           modules={[Navigation]}
           className="mySwiper"
         >
-          {products.products.slice(10, 14).map((product) => {
+          {products.slice(10, 14).map((product) => {
             return (
               <SwiperSlide key={product.id}>
-                <Cart
-                  image={product.image}
-                  discount={product.discount}
-                  dsc={product.name}
-                  price={product.price}
-                  oldPrice={product.oldPrice}
-                  num={`(${product.quantity})`}
-                />
+                <Cart product={product} />
               </SwiperSlide>
             );
           })}
@@ -101,17 +94,10 @@ const OurProducts = () => {
           modules={[Navigation]}
           className="mySwiper"
         >
-          {products.products.slice(12, 16).map((product) => {
+          {products.slice(12, 16).map((product) => {
             return (
               <SwiperSlide key={product.id}>
-                <Cart
-                  image={product.image}
-                  discount={product.discount}
-                  dsc={product.name}
-                  price={product.price}
-                  oldPrice={product.oldPrice}
-                  num={`(${product.quantity})`}
-                />
+                <Cart product={product} />
               </SwiperSlide>
             );
           })}

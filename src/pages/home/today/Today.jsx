@@ -2,9 +2,7 @@ import { useState, useEffect } from "react";
 import Title from "../../../components/title/Title";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import Cart from "../../../components/cart/Cart";
-import { setProducts } from "../../../redux/products/productsSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { productsData } from "../../../data/productData";
+import { useSelector } from "react-redux";
 import Button from "../../../components/button/Button";
 
 // Import Swiper React components
@@ -18,11 +16,7 @@ import { Navigation } from "swiper/modules";
 import { Link } from "react-router-dom";
 
 const Today = () => {
-  const dispatch = useDispatch();
-  const products = useSelector((state) => state.product);
-  useEffect(() => {
-    dispatch(setProducts(productsData)), [];
-  });
+  const products = useSelector((state) => state.product.products);
 
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
@@ -143,17 +137,10 @@ const Today = () => {
           modules={[Navigation]}
           className="mySwiper"
         >
-          {products.products.slice(0, 6).map((product) => {
+          {products.slice(0, 6).map((product) => {
             return (
               <SwiperSlide key={product.id}>
-                <Cart
-                  image={product.image}
-                  discount={product.discount}
-                  dsc={product.name}
-                  price={product.price}
-                  oldPrice={product.oldPrice}
-                  num={`(${product.quantity})`}
-                />
+                <Cart product={product} />
               </SwiperSlide>
             );
           })}

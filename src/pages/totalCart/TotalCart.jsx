@@ -1,51 +1,45 @@
-import React, { useState } from "react";
+import Button from "../../components/button/Button";
 import { Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { MdDeleteForever } from "react-icons/md";
+import {
+  removeFromCart,
+  incrementProduct,
+  decrementProduct,
+  removeAllProducts,
+} from "../../redux/cart/cartSlice";
 
 const TotalCart = () => {
-  // const [quantities, setQuantities] = useState([1, 1]); // Assuming 2 products
+  const cartItems = useSelector((state) => state.cart.cartItems);
+  const dispatch = useDispatch();
 
-  const products = [
-    {
-      name: "LCD Monitor",
-      price: 650,
-      image: "images/product/g27cq4-500x500 1.png",
-    },
-    {
-      name: "H1 Gamepad",
-      price: 50,
-      image: "images/product/GP11_PRD3 1.png",
-    },
-  ];
-
-  const handleQuantityChange = (index, value) => {
-    const newQuantities = [...quantities];
-    newQuantities[index] = parseInt(value, 10);
-    setQuantities(newQuantities);
+  const handleRemoveFromCart = (cartItem) => {
+    dispatch(removeFromCart(cartItem));
   };
 
-  const handleDecrement = (index) => {
-    const newQuantities = [...quantities];
-    if (newQuantities[index] > 1) {
-      newQuantities[index]--;
-      setQuantities(newQuantities);
-    }
+  const handleRemoveAllProducts = () => {
+    dispatch(removeAllProducts());
   };
 
-  const handleIncrement = (index) => {
-    const newQuantities = [...quantities];
-    newQuantities[index]++;
-    setQuantities(newQuantities);
+  const handleDecrement = (cartItem) => {
+    dispatch(decrementProduct(cartItem));
+  };
+
+  const handleIncrement = (cartItem) => {
+    dispatch(incrementProduct(cartItem));
   };
 
   const calculateSubtotal = (price, quantity) => {
     return price * quantity;
   };
 
-  const totalCost = quantities.reduce(
-    (acc, quantity, index) =>
-      acc + calculateSubtotal(products[index].price, quantity),
-    0
-  );
+  const calculateTotalCost = () => {
+    return cartItems.reduce((total, cartItem) => {
+      return total + calculateSubtotal(cartItem.price, cartItem.cartQuantity);
+    }, 0);
+  };
+
+  const totalCost = calculateTotalCost();
 
   return (
     <div className="my-14 px-4 md:px-8">
@@ -63,46 +57,57 @@ const TotalCart = () => {
               <th className="p-4 text-center">Quantity</th>
               <th className="p-4 text-center">Unit Price</th>
               <th className="p-4 text-center">Total</th>
+              <th className="p-4 text-center">Delete</th>
             </tr>
           </thead>
           <tbody>
-            {products.map((product, index) => (
-              <tr key={index} className="border-b">
+            {cartItems.map((cartItem) => (
+              <tr key={cartItem.id} className="border-b">
                 <td className="p-4 text-left">
                   <img
                     className="w-16 h-16"
-                    src={product.image}
-                    alt={product.name}
+                    src={cartItem.image}
+                    alt={cartItem.name}
                   />
                 </td>
-                <td className="p-4 text-left">{product.name}</td>
+                <td className="p-4 text-left">{cartItem.name}</td>
                 <td className="p-4 text-center">
                   <div className="flex justify-center items-center">
                     <button
                       className="border px-2 py-1"
-                      onClick={() => handleDecrement(index)}
+                      onClick={() => handleDecrement(cartItem)}
                     >
                       -
                     </button>
                     <input
                       type="text"
-                      value={quantities[index]}
-                      onChange={(e) =>
-                        handleQuantityChange(index, e.target.value)
-                      }
+                      value={cartItem.cartQuantity}
+                      readOnly
                       className="w-12 text-center border mx-2"
                     />
                     <button
                       className="border px-2 py-1"
-                      onClick={() => handleIncrement(index)}
+                      onClick={() => handleIncrement(cartItem)}
                     >
                       +
                     </button>
                   </div>
                 </td>
-                <td className="p-4 text-center">{product.price} LE</td>
+                <td className="p-4 text-center">{`$${cartItem.price}`}</td>
                 <td className="p-4 text-center">
-                  {calculateSubtotal(product.price, quantities[index])} LE
+                  {`$${calculateSubtotal(
+                    cartItem.price,
+                    cartItem.cartQuantity
+                  ).toFixed(2)}`}
+                </td>
+                <td>
+                  <div className="flex items-center justify-center">
+                    <MdDeleteForever
+                      size={28}
+                      className="text-[#DB4444] cursor-pointer flex items-center justify-center"
+                      onClick={() => handleRemoveFromCart(cartItem)}
+                    />
+                  </div>
                 </td>
               </tr>
             ))}
@@ -110,13 +115,18 @@ const TotalCart = () => {
         </table>
       </div>
 
-      <div className="flex flex-col md:flex-row items-center justify-between mb-10 gap-5">
-        <button className="py-2 px-4 md:py-3 md:px-8 border-2 border-gray-400 rounded-sm text-center">
-          Return To Shop
-        </button>
-        <button className="py-2 px-4 md:py-3 md:px-8 border-2 border-gray-400 rounded-sm text-center">
-          Update Cart
-        </button>
+      <div className="flex flex-col-reverse md:flex-row items-center justify-between mb-10 gap-5">
+        <Link to="/">
+          <Button
+            name="Return To Shop"
+            style="md:py-3 md:px-8 border-2 border-gray-400 text-center"
+          />
+        </Link>
+        <Button
+          name="Remove all Cart"
+          style="bg-[#DB4444] text-white md:py-3 text-center"
+          onClick={handleRemoveAllProducts}
+        />
       </div>
       <div className="flex flex-col md:flex-row justify-center md:justify-between gap-5">
         <div className="flex flex-col md:flex-row items-center gap-3 mb-5 md:mb-0">
@@ -133,7 +143,7 @@ const TotalCart = () => {
           <h4 className="text-[20px] font-medium mb-6">Cart Total</h4>
           <div className="flex items-center justify-between pb-3 border-b-[1px] border-gray-300">
             <span>Subtotal:</span>
-            <span>${totalCost}</span>
+            <span>{`$${totalCost.toFixed(2)}`}</span>
           </div>
           <div className="flex items-center justify-between my-4 pb-3 border-b-[1px] border-gray-300">
             <span>Shipping:</span>
@@ -141,7 +151,7 @@ const TotalCart = () => {
           </div>
           <div className="flex items-center justify-between pb-3 border-b-[1px] border-gray-300">
             <span>Total:</span>
-            <span>${totalCost}</span>
+            <span>{`$${totalCost.toFixed(2)}`}</span>
           </div>
           <Link to={"/CheckOut"}>
             <button className="py-2 px-4 md:py-3 md:px-8 bg-[#DB4444] text-white font-[500] mt-4 mx-auto block rounded-sm">
