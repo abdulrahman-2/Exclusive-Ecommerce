@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CartWrap } from "./Cart.style";
 import { GoHeart } from "react-icons/go";
 import { IoEyeOutline } from "react-icons/io5";
@@ -10,7 +10,6 @@ import {
   addToWishlist,
   removeFromWishlist,
 } from "../../redux/wishlist/wishlistSlice";
-import { toast } from "react-toastify";
 
 const Cart = ({
   product,
@@ -21,7 +20,26 @@ const Cart = ({
   handleRemove,
 }) => {
   const dispatch = useDispatch();
-  const [isHeartClicked, setIsHeartClicked] = useState(false); // State to track heart icon toggle
+
+  const [isHeartClicked, setIsHeartClicked] = useState(() => {
+    const heartStates = JSON.parse(localStorage.getItem("heartStates")) || [];
+    return heartStates.includes(product.id);
+  });
+
+  useEffect(() => {
+    const heartStates = JSON.parse(localStorage.getItem("heartStates")) || [];
+    if (isHeartClicked) {
+      if (!heartStates.includes(product.id)) {
+        heartStates.push(product.id);
+      }
+    } else {
+      const index = heartStates.indexOf(product.id);
+      if (index > -1) {
+        heartStates.splice(index, 1);
+      }
+    }
+    localStorage.setItem("heartStates", JSON.stringify(heartStates));
+  }, [isHeartClicked, product.id]);
 
   const handleAddToCart = (product) => {
     dispatch(addToCart(product));
@@ -30,15 +48,12 @@ const Cart = ({
   const handleToggleWishlist = (wishlistItem) => {
     if (isHeartClicked) {
       dispatch(removeFromWishlist(wishlistItem));
-      toast.info("Removed from wishlist!");
     } else {
       dispatch(addToWishlist(wishlistItem));
-      toast.success("Added to wishlist!");
     }
     setIsHeartClicked(!isHeartClicked);
   };
 
-  // Render stars based on product rating
   const renderStars = () => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {

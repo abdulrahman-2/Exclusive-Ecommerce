@@ -1,7 +1,11 @@
 import Title from "../../components/title/Title";
 import Cart from "../../components/cart/Cart";
+import Button from "../../components/button/Button";
 import { useDispatch, useSelector } from "react-redux";
-import { removeFromWishlist } from "../../redux/wishlist/wishlistSlice";
+import {
+  removeAll,
+  removeFromWishlist,
+} from "../../redux/wishlist/wishlistSlice";
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -12,6 +16,7 @@ import "swiper/css/navigation";
 // Import required modules
 import { Navigation } from "swiper/modules";
 import { Link } from "react-router-dom";
+// import { addAllToCart } from "../../redux/cart/cartSlice";
 
 const Wishlist = () => {
   const products = useSelector((state) => state.product.products);
@@ -23,16 +28,33 @@ const Wishlist = () => {
     dispatch(removeFromWishlist(wishlistItem));
   };
 
+  const handleRemoveAllFromWishlist = (wishlistItem) => {
+    dispatch(removeAll(wishlistItem));
+  };
+
+  // const handleAddAllToCart = (wishlistItem) => {
+  //   dispatch(addAllToCart(wishlistItem));
+  // };
+
   return (
     <div className="wishList">
       <div className="my-14 flex items-center justify-between gap-6">
         <div className="flex items-center gap-3">
           <h4 className="text-[20px] font-[500]">Wishlist</h4>
-          <span className="text-[20px] font-[500]">(4)</span>
+          <span className="text-[20px] font-[500]">{`(${wishlistItems.length})`}</span>
         </div>
-        <button className="py-2 px-4 font-[500] md:py-4 md:px-12 border-2 border-gray-400 rounded-sm">
-          Move All To Bag
-        </button>
+        <div className="flex items-center gap-5">
+          <Button
+            name="Move All To Bag"
+            style=" border-2 border-gray-400"
+            // onClick={handleAddAllToCart}
+          />
+          <Button
+            name="Remove ALL"
+            style="bg-[#DB4444] text-white"
+            onClick={handleRemoveAllFromWishlist}
+          />
+        </div>
       </div>
       <div>
         <Swiper

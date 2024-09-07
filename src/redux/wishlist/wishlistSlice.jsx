@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 
 const initialState = {
   wishlistItems: JSON.parse(localStorage.getItem("wishlist")) ?? [],
@@ -9,8 +10,17 @@ const wishlistSlice = createSlice({
   initialState,
   reducers: {
     addToWishlist(state, action) {
-      state.wishlistItems.push(action.payload);
-      localStorage.setItem("wishlist", JSON.stringify(state.wishlistItems));
+      const itemExists = state.wishlistItems.find(
+        (item) => item.id === action.payload.id
+      );
+
+      if (!itemExists) {
+        state.wishlistItems.push(action.payload);
+        localStorage.setItem("wishlist", JSON.stringify(state.wishlistItems));
+        toast.success("Added to wishlist!");
+      } else if (itemExists) {
+        toast.warning("item are already exist");
+      }
     },
     removeFromWishlist(state, action) {
       const newWishlist = state.wishlistItems.filter(
@@ -18,6 +28,7 @@ const wishlistSlice = createSlice({
       );
       state.wishlistItems = newWishlist;
       localStorage.setItem("wishlist", JSON.stringify(state.wishlistItems));
+      toast.info("Removed from wishlist!");
     },
     removeAll(state) {
       state.wishlistItems = [];
