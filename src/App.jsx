@@ -20,6 +20,7 @@ import { useDispatch } from "react-redux";
 import { setProducts } from "./redux/products/productsSlice";
 import { productsData } from "./data/productData";
 import { useEffect } from "react";
+import Product from "./pages/product/Product";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -38,6 +39,7 @@ const App = () => {
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/login" element={<LogIn />} />
           <Route path="/AllProduct" element={<AllProduct />} />
+          <Route path="/product/:id" element={<Product />} />
           <Route path="/Wishlist" element={<Wishlist />} />
           <Route path="/Cart" element={<TotalCart />} />
           <Route path="/CheckOut" element={<CheckOut />} />

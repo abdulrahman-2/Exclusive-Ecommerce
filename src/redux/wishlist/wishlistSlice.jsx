@@ -19,7 +19,7 @@ const wishlistSlice = createSlice({
         localStorage.setItem("wishlist", JSON.stringify(state.wishlistItems));
         toast.success("Added to wishlist!");
       } else if (itemExists) {
-        toast.warning("item are already exist");
+        toast.info("item are already exist");
       }
     },
     removeFromWishlist(state, action) {
@@ -33,6 +33,7 @@ const wishlistSlice = createSlice({
     removeAll(state) {
       state.wishlistItems = [];
       localStorage.setItem("wishlist", JSON.stringify(state.wishlistItems));
+      toast.info("All items Removed from wishlist!");
     },
   },
 });

@@ -16,11 +16,7 @@ const TopHeader = () => {
           </a>
         </div>
       </div>
-      <select
-        name="lang"
-        id="lang"
-        className="text-black p-1 rounded w-[40px] md:w-[90px]"
-      >
+      <select name="lang" id="lang" className="text-black p-1 rounded w-[90px]">
         <option value="English" defaultValue>
           English
         </option>

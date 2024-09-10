@@ -62,7 +62,10 @@ const Contact = () => {
               placeholder="Your Massage"
             ></textarea>
             <div className="mb-4 sm:mb-5">
-              <Button name="Send Massage" style={"ml-auto"} />
+              <Button
+                name="Send Massage"
+                style={"ml-auto bg-[#DB4444] text-white"}
+              />
             </div>
           </form>
         </div>

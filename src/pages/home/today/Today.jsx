@@ -147,7 +147,10 @@ const Today = () => {
         </Swiper>
       </div>
       <Link to="AllProduct">
-        <Button name="View All Products" style={"mb-10 mx-auto"} />
+        <Button
+          name="View All Products"
+          style={"mb-10 mx-auto bg-[#DB4444] text-white"}
+        />
       </Link>
       <hr />
     </div>

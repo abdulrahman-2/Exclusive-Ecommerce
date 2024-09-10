@@ -28,6 +28,11 @@ import qrCode from "./images/Qr Code.png";
 import googlePlay from "./images/GooglePlay.png";
 import googleIcon from "./images/Icon-Google.png";
 import appleStore from "./images/AppStore.png";
+import emptyCart from "./images/cart.png";
+import emptyWishlist from "./images/noitem.jpg";
+import returnIcon from "./images/Icon-return.png";
+import plusIcon from "./images/icon-plus.png";
+import minusIcon from "./images/icon-minus.png";
 
 // product
 import gamepadG92 from "./product/g92-2-500x500 1.png";
@@ -78,6 +83,11 @@ export const images = {
   googlePlay,
   appleStore,
   googleIcon,
+  emptyCart,
+  emptyWishlist,
+  returnIcon,
+  plusIcon,
+  minusIcon,
 };
 
 export const products = {

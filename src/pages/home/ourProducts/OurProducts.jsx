@@ -104,7 +104,10 @@ const OurProducts = () => {
         </Swiper>
       </div>
       <Link to="AllProduct">
-        <Button name="View All Products" style={"mt-10 mx-auto"} />
+        <Button
+          name="View All Products"
+          style={"mt-10 mx-auto bg-[#DB4444] text-white"}
+        />
       </Link>
     </div>
   );

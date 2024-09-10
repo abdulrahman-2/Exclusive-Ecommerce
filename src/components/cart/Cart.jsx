@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { CartWrap } from "./Cart.style";
 import { GoHeart } from "react-icons/go";
 import { IoEyeOutline } from "react-icons/io5";
 import { FaStar } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { useDispatch } from "react-redux";
 import { addToCart } from "../../redux/cart/cartSlice";
 import {
   addToWishlist,
@@ -20,57 +21,54 @@ const Cart = ({
   handleRemove,
 }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const wishlistItems = useSelector((state) => state.wishlist.wishlistItems);
 
-  const [isHeartClicked, setIsHeartClicked] = useState(() => {
-    const heartStates = JSON.parse(localStorage.getItem("heartStates")) || [];
-    return heartStates.includes(product.id);
-  });
+  const [isHeartClicked, setIsHeartClicked] = useState(() =>
+    wishlistItems.some((item) => item.id === product.id)
+  );
 
   useEffect(() => {
-    const heartStates = JSON.parse(localStorage.getItem("heartStates")) || [];
-    if (isHeartClicked) {
-      if (!heartStates.includes(product.id)) {
-        heartStates.push(product.id);
-      }
-    } else {
-      const index = heartStates.indexOf(product.id);
-      if (index > -1) {
-        heartStates.splice(index, 1);
-      }
-    }
-    localStorage.setItem("heartStates", JSON.stringify(heartStates));
-  }, [isHeartClicked, product.id]);
+    setIsHeartClicked(wishlistItems.some((item) => item.id === product.id));
+  }, [wishlistItems, product.id]);
 
-  const handleAddToCart = (product) => {
+  const handleAddToCart = () => {
     dispatch(addToCart(product));
   };
 
-  const handleToggleWishlist = (wishlistItem) => {
+  const handleToggleWishlist = (event) => {
+    event.stopPropagation();
     if (isHeartClicked) {
-      dispatch(removeFromWishlist(wishlistItem));
+      dispatch(removeFromWishlist(product));
     } else {
-      dispatch(addToWishlist(wishlistItem));
+      dispatch(addToWishlist(product));
     }
-    setIsHeartClicked(!isHeartClicked);
   };
 
-  const renderStars = () => {
-    const stars = [];
-    for (let i = 1; i <= 5; i++) {
-      stars.push(
-        <FaStar
-          key={i}
-          className={i <= product.rating ? "text-[#FFAD33]" : "text-[#ddd]"}
-        />
-      );
-    }
-    return stars;
+  const handleSelectProduct = () => {
+    navigate(`/product/${product.id}`);
   };
+
+  const renderStars = () =>
+    Array.from({ length: 5 }, (_, i) => (
+      <FaStar
+        key={i}
+        className={`text-${i < product.rating ? "[#FFAD33]" : "[#ddd]"}`}
+      />
+    ));
 
   return (
-    <CartWrap className="w-full h-[350px]">
+    <CartWrap
+      className="w-full h-[350px]"
+      onClick={handleSelectProduct}
+      style={{ cursor: "pointer" }}
+    >
       <div className="product h-[250px] p-10 rounded-md relative flex items-center justify-center bg-[#F5F5F5]">
-        <img src={product.image} alt={product.name || "Product image"} />
+        <img
+          src={product.image}
+          alt={product.name || "Product image"}
+          loading="lazy"
+        />
         {product.discount && (
           <div className="discount absolute left-2 top-2 bg-[#DB4444] text-[12px] text-white py-[4px] px-[12px] rounded-[4px]">
             {product.discount}
@@ -82,8 +80,10 @@ const Cart = ({
               className={`w-[34px] h-[34px] rounded-full flex items-center justify-center cursor-pointer ${
                 isHeartClicked ? "bg-[#DB4444]" : "bg-white"
               }`}
-              aria-label="Add to wishlist"
-              onClick={() => handleToggleWishlist(product)}
+              aria-label={
+                isHeartClicked ? "Remove from wishlist" : "Add to wishlist"
+              }
+              onClick={handleToggleWishlist}
             >
               <GoHeart
                 size={18}
@@ -93,29 +93,27 @@ const Cart = ({
           )}
           {showAddToWishlist && (
             <div
-              className="w-[34px] h-[34px] rounded-full bg-white flex items-center justify-center"
+              className="w-[34px] h-[34px] rounded-full bg-white flex items-center justify-center cursor-pointer"
               aria-label="View product details"
             >
-              <IoEyeOutline size={18} className="cursor-pointer" />
+              <IoEyeOutline size={18} />
             </div>
           )}
           {showDeleteIcon && (
             <div
-              className="w-[34px] h-[34px] rounded-full bg-white flex items-center justify-center"
-              aria-label="Remove from wishlist"
+              className="w-[34px] h-[34px] rounded-full bg-white flex items-center justify-center cursor-pointer"
+              aria-label="Remove from cart"
+              onClick={handleRemove}
             >
-              <RiDeleteBin6Line
-                size={18}
-                className="cursor-pointer"
-                onClick={handleRemove}
-              />
+              <RiDeleteBin6Line size={18} />
             </div>
           )}
         </div>
         {showAddToCartButton && (
           <div
             className="add w-full bg-black text-white absolute bottom-0 left-0 p-2 text-center cursor-pointer"
-            onClick={() => handleAddToCart(product)}
+            onClick={handleAddToCart}
+            aria-label="Add product to cart"
           >
             Add To Cart
           </div>

@@ -22,7 +22,10 @@ const ThisMonth = () => {
         <Title title={"This Month"} titleDsc={"Best Selling Products"} />
         <Link to="AllProduct">
           <div className="self-end">
-            <Button name="View All" />
+            <Button
+              name="View All"
+              style={"bg-[#DB4444] text-white mt-5 md:mt-0"}
+            />
           </div>
         </Link>
       </div>

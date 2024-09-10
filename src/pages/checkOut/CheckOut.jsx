@@ -1,6 +1,18 @@
-import React from "react";
+import { useSelector } from "react-redux";
 
 const CheckOut = () => {
+  const cartItems = useSelector((state) => state.cart.cartItems);
+
+  const calculateSubtotal = (price, quantity) => {
+    return price * quantity;
+  };
+
+  const calculateTotalCost = () => {
+    return cartItems.reduce((total, cartItem) => {
+      return total + calculateSubtotal(cartItem.price, cartItem.cartQuantity);
+    }, 0);
+  };
+  const totalCost = calculateTotalCost();
   return (
     <div className="my-14">
       <div className="text-[12px] md:text-sm flex items-center gap-2 mb-14 text-gray-500">
@@ -126,38 +138,29 @@ const CheckOut = () => {
 
         <div className="flex-1 p-6">
           <div className="space-y-6">
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-3">
-                <img
-                  src="images/product/g27cq4-500x500 1.png"
-                  alt="g27cq4-500x5"
-                  className="w-[50px] h-[42px] object-cover"
-                />
-                <h6 className="text-sm font-medium">LCD Monitor</h6>
+            {cartItems.map((item) => (
+              <div key={item.id} className="flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                  <img
+                    src={item.image}
+                    alt="g27cq4-500x5"
+                    className="w-[50px] h-[42px] object-cover"
+                  />
+                  <h6 className="text-sm font-medium">{item.name}</h6>
+                </div>
+                <div>
+                  <p className="text-sm">{`$${calculateSubtotal(
+                    item.price,
+                    item.cartQuantity
+                  )}`}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-sm">$650</p>
-              </div>
-            </div>
-
-            <div className="flex justify-between items-center">
-              <div className="flex items-center gap-3">
-                <img
-                  src="images/product/GP11_PRD3 1.png"
-                  alt="HI Gamepad"
-                  className="w-[50px] h-[42px] object-cover"
-                />
-                <h6 className="text-sm font-medium">HI Gamepad</h6>
-              </div>
-              <div>
-                <p className="text-sm">$1100</p>
-              </div>
-            </div>
+            ))}
 
             <div className="border-t pt-4 space-y-2">
               <div className="flex justify-between text-sm">
                 <p className="font-medium">Subtotal</p>
-                <p>$1750</p>
+                <p>{`$${totalCost}`}</p>
               </div>
               <div className="flex justify-between text-sm">
                 <p className="font-medium">Shipping</p>
@@ -165,7 +168,7 @@ const CheckOut = () => {
               </div>
               <div className="flex justify-between text-lg font-bold">
                 <p>Total</p>
-                <p>$1750</p>
+                <p>{`$${totalCost}`}</p>
               </div>
             </div>
 
