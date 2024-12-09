@@ -58,13 +58,10 @@ const Cart = ({
     ));
 
   return (
-    <CartWrap
-      className="w-full h-[350px]"
-      onClick={handleSelectProduct}
-      style={{ cursor: "pointer" }}
-    >
+    <CartWrap className="w-full h-[350px]" style={{ cursor: "pointer" }}>
       <div className="product h-[250px] p-10 rounded-md relative flex items-center justify-center bg-[#F5F5F5]">
         <img
+          onClick={handleSelectProduct}
           src={product.image}
           alt={product.name || "Product image"}
           loading="lazy"

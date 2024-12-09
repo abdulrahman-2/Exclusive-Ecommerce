@@ -13,7 +13,7 @@ const Header = () => {
     setMenuOpen(!menuOpen);
   };
 
-  const handleLinkClick = (link) => {
+  const handleLinkClick = () => {
     if (menuOpen) {
       setMenuOpen(false);
     }
@@ -29,7 +29,9 @@ const Header = () => {
   return (
     <HeaderWrap className="header w-full h-[100px] flex items-center justify-between">
       <Link to="/" onClick={() => handleLinkClick("/")}>
-        <div className="logo text-[24px] font-[700]">Exclusive</div>
+        <div className="logo text-[24px] first-letter:text-[#DB4444] md:text-4xl font-[700]">
+          Exclusive
+        </div>
       </Link>
       <ul className="links hidden lg:flex items-center gap-[48px] font-medium leading-6">
         <Link to="/" onClick={() => handleLinkClick("/")}>

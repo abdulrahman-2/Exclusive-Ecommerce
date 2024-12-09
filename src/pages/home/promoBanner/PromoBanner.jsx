@@ -10,7 +10,7 @@ const PromoBanner = () => {
   });
 
   useEffect(() => {
-    const countDownDate = new Date("Aug 26, 2024 00:00:00").getTime();
+    const countDownDate = new Date("Dec 20, 2024 00:00:00").getTime();
 
     const updateCountdown = () => {
       const now = new Date().getTime();
